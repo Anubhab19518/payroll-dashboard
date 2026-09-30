@@ -62,14 +62,14 @@ export function evaluateRunItemWithStructure(
   let lopDays = 0;
   let presentDays = daysInPeriod;
 
-  if (!isNaN(rawPayable) && rawPayable > 0 && rawPayable <= daysInPeriod) {
+  if (!isNaN(rawPayable) && rawPayable >= 0 && rawPayable <= daysInPeriod) {
     payableDays = rawPayable;
     lopDays = !isNaN(rawLop) && rawLop >= 0 ? rawLop : Math.max(0, daysInPeriod - payableDays);
-    presentDays = !isNaN(rawPresent) && rawPresent > 0 ? rawPresent : payableDays;
-  } else if (!isNaN(rawLop) && rawLop > 0 && rawLop < daysInPeriod) {
+    presentDays = !isNaN(rawPresent) && rawPresent >= 0 ? rawPresent : payableDays;
+  } else if (!isNaN(rawLop) && rawLop > 0 && rawLop <= daysInPeriod) {
     lopDays = rawLop;
     payableDays = Math.max(0, daysInPeriod - lopDays);
-    presentDays = !isNaN(rawPresent) && rawPresent > 0 ? rawPresent : payableDays;
+    presentDays = !isNaN(rawPresent) && rawPresent >= 0 ? rawPresent : payableDays;
   } else {
     // Default to full calendar period (standard monthly contract)
     payableDays = daysInPeriod;
