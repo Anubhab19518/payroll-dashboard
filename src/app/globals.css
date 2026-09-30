@@ -1,7 +1,7 @@
 @import '../styles/tokens.css';
 
 /* ==============================================================================
-   Modern Base CSS Reset & Production Styles
+   Base Reset & Enterprise SaaS Global Styles
    ============================================================================== */
 
 *,
@@ -14,8 +14,7 @@
 
 html {
   font-family: var(--font-family-sans);
-  color-scheme: dark;
-  background-color: hsl(var(--bg-primary));
+  background-color: hsl(var(--bg-app));
   color: hsl(var(--text-primary));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -26,8 +25,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: hsl(var(--bg-primary));
+  background-color: hsl(var(--bg-app));
   color: hsl(var(--text-primary));
+  font-family: var(--font-family-sans);
   overflow-x: hidden;
 }
 
@@ -39,7 +39,7 @@ a {
 }
 
 a:hover {
-  color: hsl(var(--color-brand-accent));
+  color: hsl(var(--color-brand-primary));
 }
 
 /* Form controls */
@@ -48,7 +48,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit;
+  font-family: var(--font-family-sans);
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
@@ -60,65 +60,160 @@ button {
   border: none;
 }
 
-/* Visible accessible focus rings (AGENTS.md Rule 31) */
+/* Accessible focus rings */
 :focus-visible {
   outline: 2px solid hsl(var(--border-focus));
   outline-offset: 2px;
 }
 
-/* ==============================================================================
-   Glassmorphic & Premium UI Utility Classes
-   ============================================================================== */
-
-.glass-panel {
-  background: hsl(var(--bg-surface) / 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid hsl(var(--border-subtle));
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+/* Numbers alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-.glass-card {
-  background: hsl(var(--bg-surface) / 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid hsl(var(--border-subtle));
-  border-radius: var(--radius-md);
-  padding: var(--space-6);
-  transition:
-    transform var(--transition-base),
-    border-color var(--transition-base),
-    box-shadow var(--transition-base);
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.glass-card:hover {
-  transform: translateY(-2px);
-  border-color: hsl(var(--border-highlight));
-  box-shadow: var(--shadow-xl);
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #818cf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border-medium));
+  border-radius: var(--radius-full);
 }
 
-.gradient-accent {
-  background: linear-gradient(135deg, hsl(var(--color-brand-accent)) 0%, #a855f7 100%);
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--text-muted));
 }
 
-.container {
+/* Container */
+.container-fluid {
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: var(--space-6);
   padding-right: var(--space-6);
 }
 
-.grid-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--space-6);
+/* Card utility */
+.card-base {
+  background: hsl(var(--bg-primary));
+  border: 1px solid hsl(var(--border-subtle));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.card-hover {
+  transition:
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.card-hover:hover {
+  border-color: hsl(var(--border-medium));
+  box-shadow: var(--shadow-md);
+}
+
+/* Button Primary Gradient / Solid */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: hsl(var(--color-brand-primary));
+  color: hsl(var(--text-inverse));
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: hsl(var(--color-brand-primary-hover));
+  box-shadow: 0 4px 12px hsl(var(--color-brand-glow));
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background-color: hsl(var(--bg-primary));
+  border: 1px solid hsl(var(--border-subtle));
+  color: hsl(var(--text-secondary));
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: hsl(var(--bg-secondary));
+  border-color: hsl(var(--border-medium));
+  color: hsl(var(--text-primary));
+}
+
+/* ==============================================================================
+   Print Stylesheet for Clean Payslips & PDF Generation
+   ============================================================================== */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 15mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide entire page structure except printable payslip */
+  body * {
+    visibility: hidden !important;
+  }
+
+  #payslip-print-area,
+  #payslip-print-area * {
+    visibility: visible !important;
+  }
+
+  #payslip-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+  }
+
+  /* Exclude screen components like sidebars, headers, action buttons, search bars */
+  header,
+  aside,
+  nav,
+  button,
+  .no-print {
+    display: none !important;
+  }
 }

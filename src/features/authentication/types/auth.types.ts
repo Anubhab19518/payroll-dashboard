@@ -1,5 +1,38 @@
 import type { UserSession } from '@/lib/auth/rbac';
 
+export interface AuthUser {
+  id: string;
+  email?: string;
+  employeeCode?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  isSuperAdmin?: boolean;
+  status?: string;
+  role?: string;
+  roles?: string[];
+}
+
+export interface LoginResult {
+  accessToken: string;
+  refreshToken?: string;
+  user: AuthUser;
+  forceChange?: boolean;
+}
+
+export interface UserPermissionItem {
+  id?: string;
+  subject: string;
+  action: string;
+  conditions?: Record<string, unknown> | null;
+}
+
+export interface UserPermissionsResponse {
+  permissions?: UserPermissionItem[];
+  roles?: string[];
+  isSuperAdmin?: boolean;
+}
+
 export interface AuthState {
   readonly user: UserSession | null;
   readonly isAuthenticated: boolean;

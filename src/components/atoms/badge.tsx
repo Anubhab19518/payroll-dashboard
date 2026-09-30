@@ -1,14 +1,17 @@
 import type { HTMLAttributes, CSSProperties } from 'react';
+import type { PayrollRunStatus, SalaryStructureStatus } from '@/types/payroll';
 
-export type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info';
+export type BadgeVariant =
+  'default' | 'success' | 'warning' | 'danger' | 'info' | 'purple' | 'slate';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
+  status?: PayrollRunStatus | SalaryStructureStatus | string;
 }
 
 const badgeVariants: Record<BadgeVariant, CSSProperties> = {
   default: {
-    backgroundColor: 'hsl(var(--bg-surface-hover))',
+    backgroundColor: 'hsl(var(--bg-secondary))',
     color: 'hsl(var(--text-secondary))',
     border: '1px solid hsl(var(--border-subtle))',
   },
@@ -32,9 +35,42 @@ const badgeVariants: Record<BadgeVariant, CSSProperties> = {
     color: 'hsl(var(--color-info))',
     border: '1px solid hsl(var(--color-info) / 0.3)',
   },
+  purple: {
+    backgroundColor: 'hsl(var(--color-purple-bg))',
+    color: 'hsl(var(--color-purple))',
+    border: '1px solid hsl(var(--color-purple) / 0.3)',
+  },
+  slate: {
+    backgroundColor: 'hsl(var(--bg-app))',
+    color: 'hsl(var(--text-muted))',
+    border: '1px solid hsl(var(--border-medium))',
+  },
 };
 
-export function Badge({ children, variant = 'default', style, ...props }: BadgeProps) {
+export function getStatusBadgeVariant(status?: string): BadgeVariant {
+  switch (status) {
+    case 'FINALIZED':
+    case 'APPROVED':
+    case 'ACTIVE':
+      return 'success';
+    case 'CALCULATED':
+    case 'UNDER_REVIEW':
+    case 'In Progress':
+      return 'info';
+    case 'DRAFT':
+    case 'REVISED':
+      return 'warning';
+    case 'CANCELLED':
+    case 'ARCHIVED':
+      return 'danger';
+    default:
+      return 'default';
+  }
+}
+
+export function Badge({ children, variant, status, style, ...props }: BadgeProps) {
+  const resolvedVariant = variant || (status ? getStatusBadgeVariant(status) : 'default');
+
   return (
     <span
       style={{
@@ -44,14 +80,14 @@ export function Badge({ children, variant = 'default', style, ...props }: BadgeP
         borderRadius: 'var(--radius-full)',
         fontSize: 'var(--font-size-xs)',
         fontWeight: 600,
-        textTransform: 'uppercase',
-        letterSpacing: '0.05em',
-        ...badgeVariants[variant],
+        letterSpacing: '0.02em',
+        lineHeight: 1.2,
+        ...badgeVariants[resolvedVariant],
         ...style,
       }}
       {...props}
     >
-      {children}
+      {children || status}
     </span>
   );
 }

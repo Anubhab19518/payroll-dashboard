@@ -18,24 +18,23 @@ export async function loginAction(formData: unknown): Promise<AuthActionResult> 
   }
 
   try {
-    const user = await AuthService.authenticate(result.data);
-
-    if (!user) {
-      return {
-        success: false,
-        error: 'Invalid email or password',
-      };
-    }
+    const authResult = await AuthService.login(result.data);
 
     return {
       success: true,
-      user,
+      user: {
+        id: authResult.user.id,
+        email: authResult.user.email || '',
+        name: authResult.user.name || '',
+        role: authResult.user.isSuperAdmin ? 'admin' : 'manager',
+      },
     };
   } catch (error) {
     logger.error('Unexpected error during login action', error);
+    const msg = error instanceof Error ? error.message : 'Invalid credentials. Please try again.';
     return {
       success: false,
-      error: 'An internal error occurred. Please try again later.',
+      error: msg,
     };
   }
 }

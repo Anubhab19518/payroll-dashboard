@@ -3,6 +3,20 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   output: 'standalone',
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/login',
+        permanent: false,
+      },
+      {
+        source: '/dashboard',
+        destination: '/payroll',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

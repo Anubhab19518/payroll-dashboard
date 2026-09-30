@@ -1,10 +1,21 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { loginAction } from '../actions/login.action';
+import { AuthService } from '../services/auth-service';
 
 describe('Login Server Action (AGENTS.md Rule 15)', () => {
   it('should authenticate valid credentials successfully', async () => {
+    vi.spyOn(AuthService, 'login').mockResolvedValueOnce({
+      accessToken: 'mock-token',
+      user: {
+        id: 'usr_admin_01',
+        email: 'admin@example.com',
+        name: 'Administrator',
+        isSuperAdmin: true,
+      },
+    });
+
     const result = await loginAction({
-      email: 'admin@example.com',
+      identifier: 'admin@example.com',
       password: 'Password123!',
     });
 
@@ -16,8 +27,10 @@ describe('Login Server Action (AGENTS.md Rule 15)', () => {
   });
 
   it('should return error for invalid credentials', async () => {
+    vi.spyOn(AuthService, 'login').mockRejectedValueOnce(new Error('Invalid email or password'));
+
     const result = await loginAction({
-      email: 'admin@example.com',
+      identifier: 'admin@example.com',
       password: 'WrongPassword!',
     });
 
@@ -27,16 +40,16 @@ describe('Login Server Action (AGENTS.md Rule 15)', () => {
     }
   });
 
-  it('should return validation errors for malformed input', async () => {
+  it('should return validation errors for empty input', async () => {
     const result = await loginAction({
-      email: 'not-an-email',
-      password: 'short',
+      identifier: '',
+      password: '',
     });
 
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.fieldErrors).toBeDefined();
-      expect(result.fieldErrors?.['email']).toBeDefined();
+      expect(result.fieldErrors?.['identifier']).toBeDefined();
       expect(result.fieldErrors?.['password']).toBeDefined();
     }
   });
